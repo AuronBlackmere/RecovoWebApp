@@ -1,0 +1,72 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'coach' && root.child('legions').child(root.child('users').child(auth.uid).child('legionId').val()).child('athleteUids').child($uid).exists()",
+        ".write": "$uid === auth.uid",
+        ".validate": "newData.hasChildren(['uid', 'email', 'name', 'role'])",
+        "inbox": {
+          ".read": "$uid === auth.uid",
+          ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'coach' && root.child('legions').child(root.child('users').child(auth.uid).child('legionId').val()).child('athleteUids').child($uid).exists()"
+        }
+      }
+    },
+    "workouts": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "recovery": {
+      "$uid": {
+        ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'coach' && root.child('legions').child(root.child('users').child(auth.uid).child('legionId').val()).child('athleteUids').child($uid).exists()",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "daily_status": {
+      "$uid": {
+        ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'coach' && root.child('legions').child(root.child('users').child(auth.uid).child('legionId').val()).child('athleteUids').child($uid).exists()",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "injuries": {
+      "$uid": {
+        ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'coach' && root.child('legions').child(root.child('users').child(auth.uid).child('legionId').val()).child('athleteUids').child($uid).exists()",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "feedback": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "coach_notes": {
+      "$uid": {
+        ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'coach' && root.child('legions').child(root.child('users').child(auth.uid).child('legionId').val()).child('athleteUids').child($uid).exists()",
+        ".write": "root.child('users').child(auth.uid).child('role').val() === 'coach' && root.child('legions').child(root.child('users').child(auth.uid).child('legionId').val()).child('athleteUids').child($uid).exists()"
+      }
+    },
+    "legions": {
+      "$legionId": {
+        ".read": "data.child('coachUid').val() === auth.uid || data.child('athleteUids').child(auth.uid).exists()",
+        ".write": "data.child('coachUid').val() === auth.uid || !data.exists()",
+        "athleteUids": {
+          "$uid": {
+            ".write": "$uid === auth.uid || root.child('legions').child($legionId).child('coachUid').val() === auth.uid"
+          }
+        },
+        "athlete_status": {
+          "$uid": {
+            ".write": "$uid === auth.uid",
+            ".read": "root.child('legions').child($legionId).child('coachUid').val() === auth.uid || $uid === auth.uid"
+          }
+        }
+      }
+    },
+    "inviteCodes": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}
