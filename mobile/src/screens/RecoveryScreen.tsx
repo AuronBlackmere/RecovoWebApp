@@ -281,8 +281,10 @@ function AthleteRecoveryView() {
         </Pressable>
         <Text style={styles.syncNote}>
           Supports: Apple Watch • Garmin • Whoop • Polar • Google Fit
-        </Text>
-      </View>
+          </Text>
+        </View>
+        </>
+      )}
 
       {/* AI Recovery Suggestions */}
       <Text style={[styles.sectionLabel, { marginTop: SPACING.lg }]}>AI RECOVERY SUGGESTIONS</Text>
