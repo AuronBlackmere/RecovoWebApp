@@ -1042,9 +1042,9 @@ export function OnboardingScreen() {
         {calibrating && (
           <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.bg, zIndex: 999, justifyContent: 'center', alignItems: 'center' }]}>
             <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: theme.orange + '20', alignItems: 'center', justifyContent: 'center', marginBottom: 32 }}>
-              <Animated.View style={{ transform: [{ rotate: '180deg' }] }}>
+              <Reanimated.View style={{ transform: [{ rotate: '180deg' }] }}>
                 <Ionicons name="sync" size={40} color={theme.orange} />
-              </Animated.View>
+              </Reanimated.View>
             </View>
             <Text style={{ fontSize: 24, fontWeight: '900', color: theme.text, textAlign: 'center', marginBottom: 12 }}>
               Calibrating Profile...
