@@ -37,10 +37,11 @@ export function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [calibrating, setCalibrating] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async () => {
     if (!email || !password) {
-      Alert.alert('Missing fields', 'Please enter email and password.');
+      setErrorMsg('Please enter email and password.');
       return;
     }
     setLoading(true);
@@ -52,7 +53,7 @@ export function LoginScreen() {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         setStep('2fa');
       } else {
-        if (!name.trim()) { Alert.alert('Name required'); setLoading(false); return; }
+        if (!name.trim()) { setErrorMsg('Name required'); setLoading(false); return; }
         const cred = await registerWithEmail(email.trim(), password);
         await createUserProfile(cred.user.uid, {
           email: email.trim(),
@@ -65,7 +66,7 @@ export function LoginScreen() {
       const msg = e?.code === 'auth/invalid-credential' ? 'Invalid email or password.'
         : e?.code === 'auth/email-already-in-use' ? 'Email already in use.'
         : e?.message ?? 'Something went wrong.';
-      Alert.alert('Auth Error', msg);
+      setErrorMsg(msg);
     }
     setLoading(false);
   };
@@ -82,7 +83,7 @@ export function LoginScreen() {
 
   const handleGoogleSignIn = async () => {
     if (Platform.OS === 'web') {
-      Alert.alert('Not Supported', 'Google Sign-In is not supported on the web version.');
+      setErrorMsg('Google Sign-In is not supported on the web version.');
       return;
     }
     try {
@@ -97,7 +98,7 @@ export function LoginScreen() {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     } catch (error: any) {
-      Alert.alert('Google Sign-In Error', error.message || 'Something went wrong.');
+      setErrorMsg(error.message || 'Something went wrong.');
     }
   };
 
@@ -127,7 +128,7 @@ export function LoginScreen() {
             <Pressable
               key={m}
               style={[styles.modeBtn, mode === m && styles.modeBtnActive]}
-              onPress={() => setMode(m)}
+              onPress={() => { setMode(m); setErrorMsg(''); }}
             >
               <Text style={[styles.modeBtnText, mode === m && { color: COLORS.textInverse }]}>
                 {m === 'login' ? 'SIGN IN' : 'REGISTER'}
@@ -206,6 +207,11 @@ export function LoginScreen() {
                 </View>
               </View>
 
+              {!!errorMsg && (
+                <Text style={{ color: '#ff4444', textAlign: 'center', marginBottom: 12, fontWeight: 'bold' }}>
+                  {errorMsg}
+                </Text>
+              )}
               <Pressable
                 style={[styles.submitBtn, loading && { opacity: 0.5 }]}
                 onPress={handleSubmit}
